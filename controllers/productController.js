@@ -18,7 +18,11 @@ exports.getProducts = async (req, res) => {
         res.render('catalog', { products });
     } catch (error) {
         console.error('Error fetching products:', error);
-        res.status(500).send('Internal Server Error');
+        res.status(500).send({
+		    status: 500,
+		    message: 'Internal Server Error',
+		    error: error.message // Assuming `error` is the error object
+		});
     } finally {
         sql.close();
     }
