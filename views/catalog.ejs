@@ -16,11 +16,25 @@
                         <div class="card-body">
                             <h5 class="card-title"><%= product.Name %></h5>
                             <p class="card-text"><%= product.Description %></p>
+                            <p class="card-text">Price: $<%= product.Price.toFixed(2) %></p>
+                            <div class="form-group">
+                                <label for="quantity">Quantity:</label>
+                                <input type="number" class="form-control" id="quantity<%= product.id %>" name="quantity<%= product.id %>" value="1">
+                            </div>
+                            <button class="btn btn-primary" onclick="generateQuotation('<%= product.Name %>', <%= product.Price %>, <%= product.id %>)">Generate Quotation</button>
                         </div>
                     </div>
                 </div>
             <% }) %>
         </div>
     </div>
+
+    <script>
+        function generateQuotation(name, price, id) {
+            var quantity = document.getElementById('quantity' + id).value;
+            var total = price * quantity;
+            alert('Product: ' + name + '\nQuantity: ' + quantity + '\nTotal Price: $' + total.toFixed(2));
+        }
+    </script>
 </body>
 </html>
