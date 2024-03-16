@@ -8,8 +8,9 @@ router.get('/', (req, res) => {
 
 router.post('/login', authController.login);
 
-router.get('/catalog', authController.isLoggedIn, (req, res) => {
+router.get('/catalog', (req, res) => {
     res.render('catalog');
 });
+
 
 module.exports = router;

@@ -23,7 +23,7 @@ app.listen(PORT, () => {
 const config = {
     user: 'azureuser',
     password: 'Test@1234',
-    server: 'quatation.database.windows.net',
+    server: 'qutation-project.database.windows.net',
     database: 'Qutation',
     options: {
         encrypt: true // Use encryption
