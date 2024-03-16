@@ -23,7 +23,7 @@ exports.getProducts = async (req, res) => {
 		    message: 'Internal Server Error',
 		    error: error.message // Assuming `error` is the error object
 		});
-    } finally {
+    } finally {	
         sql.close();
     }
 };
