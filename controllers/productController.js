@@ -4,7 +4,7 @@ const config = {
     user: 'azureuser',
     password: 'Test@1234',
     server: 'qutation-project.database.windows.net',
-    database: 'Qutation',
+    database: 'qutation-project',
     options: {
         encrypt: true // Use encryption
     }
