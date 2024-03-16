@@ -10,27 +10,17 @@
     <div class="container mt-5">
         <h2 class="mb-4">Catalog</h2>
         <div class="row">
-            <!-- Product Cards -->
-            <!-- Replace this section with dynamic content from your database -->
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Product 1</h5>
-                        <p class="card-text">Description of Product 1.</p>
-                        <p class="card-text">Price: $10.00</p>
+            <% products.forEach(product => { %>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title"><%= product.name %></h5>
+                            <p class="card-text"><%= product.description %></p>
+                            <p class="card-text">Price: $<%= product.price.toFixed(2) %></p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Product 2</h5>
-                        <p class="card-text">Description of Product 2.</p>
-                        <p class="card-text">Price: $20.00</p>
-                    </div>
-                </div>
-            </div>
-            <!-- End Product Cards -->
+            <% }) %>
         </div>
     </div>
 </body>

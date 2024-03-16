@@ -1,0 +1,25 @@
+
+const sql = require('mssql');
+const config = {
+    user: 'azureuser',
+    password: 'Test@1234',
+    server: 'qutation-project.database.windows.net',
+    database: 'Qutation',
+    options: {
+        encrypt: true // Use encryption
+    }
+};
+
+exports.getProducts = async (req, res) => {
+    try {
+        await sql.connect(config);
+        const result = await sql.query('SELECT * FROM Products');
+        const products = result.recordset;
+        res.render('catalog', { products });
+    } catch (error) {
+        console.error('Error fetching products:', error);
+        res.status(500).send('Internal Server Error');
+    } finally {
+        sql.close();
+    }
+};
