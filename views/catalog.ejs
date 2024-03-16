@@ -18,8 +18,8 @@
                             <p class="card-text"><%= product.Description %></p>
                             <p class="card-text">Price: <%= product.Price %></p>
                             <label for="quantity">Quantity:</label>
-                            <input type="number" id="quantity_<%= product.id %>" name="quantity" min="1" value="1">
-                            <button onclick="generateQuotation('<%= product.Name %>', <%= product.Price %>, <%= product.id %>)" class="btn btn-primary">Generate Quotation</button>
+                            <input type="number" id="quantity_<%= product.ProductID %>" name="quantity" min="1" value="1">
+                            <button onclick="generateQuotation('<%= product.Name %>', <%= product.Price %>, <%= product.ProductID %>)" class="btn btn-primary">Generate Quotation</button>
                         </div>
                     </div>
                 </div>
