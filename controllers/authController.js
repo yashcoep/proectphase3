@@ -52,4 +52,15 @@ exports.isLoggedIn = (req, res, next) => {
     }
 };
 
+exports.logout = (req, res) => {
+    // Clear the session
+    req.session.destroy((err) => {
+        if (err) {
+            console.error('Error destroying session:', err);
+        }
+        // Redirect to login page after logout
+        res.redirect('/');
+    });
+};
+
 
