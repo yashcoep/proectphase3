@@ -19,35 +19,27 @@
         <h2 class="mb-4">Catalog</h2>
         <div class="row">
             <% for (let i = startIndex; i < endIndex; i++) { %>
+                <% const product = products[i]; %>
                 <div class="col-md-4 product-card">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title"><%= products[i].Name %></h5>
-                            <p class="card-text"><%= products[i].Description %></p>
-                            <p class="card-text">Price: <%= products[i].Price %></p>
+                            <h5 class="card-title"><%= product.Name %></h5>
+                            <p class="card-text"><%= product.Description %></p>
+                            <p class="card-text">Price: <%= product.Price %></p>
                             <label for="quantity">Quantity:</label>
-                            <input type="number" id="quantity_<%= products[i].ProductID %>" name="quantity" min="1" value="1">
-                            <button onclick="generateQuotation('<%= products[i].Name %>', <%= products[i].Price %>, <%= products[i].ProductID %>)" class="btn btn-primary">Generate Quotation</button>
+                            <input type="number" id="quantity_<%= product.ProductID %>" name="quantity" min="1" value="1">
+                            <button onclick="generateQuotation('<%= product.Name %>', <%= product.Price %>, <%= product.ProductID %>)" class="btn btn-primary">Generate Quotation</button>
                         </div>
                     </div>
                 </div>
             <% } %>
         </div>
-        <nav aria-label="Pagination">
-            <ul class="pagination justify-content-center">
-                <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
-                    <a class="page-link" href="?page=<%= currentPage - 1 %>" tabindex="-1">Previous</a>
-                </li>
-                <% for (let i = 1; i <= totalPages; i++) { %>
-                    <li class="page-item <%= currentPage === i ? 'active' : '' %>">
-                        <a class="page-link" href="?page=<%= i %>"><%= i %></a>
-                    </li>
-                <% } %>
-                <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
-                    <a class="page-link" href="?page=<%= currentPage + 1 %>">Next</a>
-                </li>
-            </ul>
-        </nav>
+        <% if (startIndex > 0) { %>
+            <a href="/catalog?page=<%= currentPage - 1 %>" class="btn btn-primary mr-2">Previous</a>
+        <% } %>
+        <% if (endIndex < products.length) { %>
+            <a href="/catalog?page=<%= currentPage + 1 %>" class="btn btn-primary">Next</a>
+        <% } %>
     </div>
 
     <script>
