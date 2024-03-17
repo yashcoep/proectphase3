@@ -19,7 +19,7 @@ exports.login = async (req, res) => {
 
         if (result.recordset.length > 0) {
             // User found, compare hashed passwords
-            const hashedPasswordDB = result.recordset[0].password;
+            const hashedPasswordDB = result.recordset[0].Password;
             const hashedPasswordInput = hashPassword(password);
 
             if (hashedPasswordDB === hashedPasswordInput) {
