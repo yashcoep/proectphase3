@@ -28,11 +28,11 @@ exports.login = async (req, res) => {
                 res.redirect('/catalog');
             } else {
                 // Passwords don't match, redirect to login page
-                res.redirect('/');
+                 res.status(401).send('Incorrect username or password' + hashedPasswordDB + ' ' + hashedPasswordInput);
             }
         } else {
             // User not found, redirect to login page
-            res.redirect('/');
+            res.status(401).send('Incorrect username or password' + hashedPasswordDB + ' ' + hashedPasswordInput);
         }
     } catch (error) {
         console.error('Error authenticating user:', error);
