@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catalog</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .product-card {
+            margin-bottom: 20px; /* Add space between rows */
+        }
+    </style>
 </head>
 <body>
     <div class="container mt-5">
@@ -12,28 +17,35 @@
             <a href="/logout" class="btn btn-danger">Logout</a>
         </div>
         <h2 class="mb-4">Catalog</h2>
-        <div class="row mb-4">
-            <% products.slice(0, 9).forEach(product => { %>
-                <div class="col-md-4 mb-4">
+        <div class="row">
+            <% for (let i = startIndex; i < endIndex; i++) { %>
+                <div class="col-md-4 product-card">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title"><%= product.Name %></h5>
-                            <p class="card-text"><%= product.Description %></p>
-                            <p class="card-text">Price: <%= product.Price %></p>
+                            <h5 class="card-title"><%= products[i].Name %></h5>
+                            <p class="card-text"><%= products[i].Description %></p>
+                            <p class="card-text">Price: <%= products[i].Price %></p>
                             <label for="quantity">Quantity:</label>
-                            <input type="number" id="quantity_<%= product.ProductID %>" name="quantity" min="1" value="1">
-                            <button onclick="generateQuotation('<%= product.Name %>', <%= product.Price %>, <%= product.ProductID %>)" class="btn btn-primary">Generate Quotation</button>
+                            <input type="number" id="quantity_<%= products[i].ProductID %>" name="quantity" min="1" value="1">
+                            <button onclick="generateQuotation('<%= products[i].Name %>', <%= products[i].Price %>, <%= products[i].ProductID %>)" class="btn btn-primary">Generate Quotation</button>
                         </div>
                     </div>
                 </div>
-            <% }) %>
+            <% } %>
         </div>
-        <nav aria-label="Page navigation">
+        <nav aria-label="Pagination">
             <ul class="pagination justify-content-center">
-                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <!-- Add more page links if needed -->
-                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+                    <a class="page-link" href="?page=<%= currentPage - 1 %>" tabindex="-1">Previous</a>
+                </li>
+                <% for (let i = 1; i <= totalPages; i++) { %>
+                    <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                        <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                    </li>
+                <% } %>
+                <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+                    <a class="page-link" href="?page=<%= currentPage + 1 %>">Next</a>
+                </li>
             </ul>
         </nav>
     </div>
