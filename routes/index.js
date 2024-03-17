@@ -11,7 +11,7 @@ router.get('/', (req, res) => {
 
 router.post('/login', authController.login);
 router.get('/catalog', isAuthenticated,productController.getProducts);
-const { isAuthenticated } = require('../middlewares/authMiddleware');
+router.get('/logout', authController.logout);
 
 
 module.exports = router;
