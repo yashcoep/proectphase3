@@ -36,7 +36,7 @@ exports.login = async (req, res) => {
         }
     } catch (error) {
         console.error('Error authenticating user:', error);
-        res.status(500).send('Internal Server Error');
+        res.status(500).send('Internal Server Error' + error);
     } finally {
         // Close the database connection
         sql.close();
