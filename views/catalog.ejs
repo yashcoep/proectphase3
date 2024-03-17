@@ -8,6 +8,9 @@
 </head>
 <body>
     <div class="container mt-5">
+        <div class="d-flex justify-content-end mb-3">
+            <a href="/logout" class="btn btn-danger">Logout</a>
+        </div>
         <h2 class="mb-4">Catalog</h2>
         <div class="row">
             <% products.forEach(product => { %>
@@ -24,9 +27,6 @@
                     </div>
                 </div>
             <% }) %>
-        </div>
-         <div class="mt-4">
-            <a href="/logout" class="btn btn-danger">Logout</a>
         </div>
     </div>
 
