@@ -3,7 +3,6 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 const sql = require('mssql');
 
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -15,6 +14,8 @@ app.set('view engine', 'ejs');
 // Routes
 const indexRoutes = require('./routes/index');
 app.use('/', indexRoutes);
+require('./insertData');
+
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

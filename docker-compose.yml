@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  nodejs_app:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_HOST=localhost
+      - DB_USER=sa
+      - DB_PASSWORD=Password.1
+      - DB_DATABASE=your_db_name
+    networks:
+      - my-network
+
+networks:
+  my-network:
+    external: true

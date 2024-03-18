@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <!-- Cart items -->
+    <div class="container mt-5">
+        <h2 class="mb-4">Cart</h2>
+        <ul class="list-group">
+            <% cartItems.forEach(item => { %>
+                <li class="list-group-item"><%= item.name %> - Quantity: <%= item.quantity %></li>
+            <% }) %>
+        </ul>
+        <div class="mt-3">
+            <!-- Button to generate quotation for cart -->
+            <button id="generateQuotationBtn" class="btn btn-primary">Generate Quotation</button>
+            <!-- Button to go back to catalog -->
+            <a href="/catalog" class="btn btn-secondary ml-2">Back to Catalog</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('generateQuotationBtn').addEventListener('click', function() {
+            // Send AJAX request to generate quotation for cart
+            fetch('/cart/generatequotation', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({}) // Empty body as we don't need to send any data
+            })
+            .then(response => response.text())
+            .then(quotationText => {
+                // Handle the generated quotation text
+                alert('Generated Quotation:\n' + quotationText);
+            })
+            .catch(error => {
+                console.error('Error generating quotation:', error);
+                alert('Error generating quotation. Please try again.');
+            });
+        });
+    </script>
+</body>
+</html>
