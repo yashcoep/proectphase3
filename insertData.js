@@ -1,5 +1,5 @@
 const sql = require('mssql');
-const config = require('./config/dbConfig'); // Import database configuration
+const config = require('./config/dbConfig'); 
 
 async function insertData() {
   try {

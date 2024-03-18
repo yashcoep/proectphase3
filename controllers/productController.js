@@ -1,6 +1,5 @@
 const sql = require('mssql');
-const config = require('../config/dbConfig'); // Import database configuration
-
+const config = require('../config/dbConfig'); 
 const productsPerPage = 9; // Number of products to display per page
 
 exports.getProducts = async (req, res) => {

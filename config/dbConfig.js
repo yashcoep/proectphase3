@@ -10,7 +10,7 @@ if (process.env.NODE_ENV === 'production') {
         server: 'qutation-project.database.windows.net',
         database: 'qutation-project',
         options: {
-            encrypt: true // Use encryption
+            encrypt: true 
         }
     };
 } else {

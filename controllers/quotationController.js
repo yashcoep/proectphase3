@@ -1,20 +1,17 @@
-// In your quotationController.js file
-
 const sql = require('mssql');
-const config = require('../config/dbConfig'); // Import database configuration
-
+const config = require('../config/dbConfig'); 
 exports.saveQuotation = async (req, res) => {
     const quotationData = req.body;
     const cart = quotationData.quatationcart;
  	let pool;
-    let transaction; // Declare transaction variable here
+    let transaction;
 
     try {
         if (!Array.isArray(cart)) {
             throw new Error('Cart is not an array or is empty.');
         }
 
-        // Connect to Azure SQL Database
+        // Connect to  SQL Database
         pool = await sql.connect(config);
         console.log('Connected to the database');
 
