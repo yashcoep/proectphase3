@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create User</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="mb-4">Create User</h2>
+        <form id="createUserForm" action="/create-user" method="POST">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Create User</button>
+        </form>
+    </div>
+
+    <!-- JavaScript code to handle form submission -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#createUserForm').submit(function(event) {
+                event.preventDefault(); // Prevent default form submission
+                // Perform AJAX request to create user
+                $.ajax({
+                    type: 'POST',
+                    url: '/create-user',
+                    data: $(this).serialize(), // Serialize form data
+                    success: function(response) {
+                        alert('User created successfully'); // Show success message
+                        window.location.href = '/'; // Redirect to login page
+                    },
+                    error: function(xhr, status, error) {
+                        alert('Error creating user: ' + error); // Show error message
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
