@@ -1,5 +1,7 @@
 Setting Up Qutation generator web site
 Follow these steps to set up Qutation generator web service:
+Pre-requiste: Docker Desktop or equivalent docker application installed on your system.
+
 
 1. Pull Azure SQL Docker Image: Pull the Azure SQL Edge Docker image using the following command:
 
