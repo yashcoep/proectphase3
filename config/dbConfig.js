@@ -16,7 +16,7 @@ if (process.env.NODE_ENV === 'production') {
     config = {
         user: 'sa',
         password: 'Password.1',
-        server: 'azuresqledge',
+        server: 'localhost',
         database: 'master',
         options: {
             encrypt: false,

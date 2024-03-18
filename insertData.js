@@ -89,6 +89,35 @@ async function insertData() {
                           INSERT INTO Products (Name, Description, Price, Quantity)
                           VALUES ('Spruce Wood Product', 'Description for Spruce wood product', 190.00, 100);`;
 
+
+    await sql.query(`
+            IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Quotation')
+            BEGIN
+                CREATE TABLE Quotation (
+                    QuotationID INT PRIMARY KEY IDENTITY(1,1),
+                    CustomerID INT,
+                    Date DATE,
+                    TotalPrice DECIMAL(10, 2),
+                    FOREIGN KEY (CustomerID) REFERENCES Users(UserID)
+                );
+            END
+        `);
+
+    await sql.query(`
+        IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'QuotationDetail')
+        BEGIN
+            CREATE TABLE QuotationDetail (
+                QuotationDetailID INT PRIMARY KEY IDENTITY(1,1),
+                QuotationID INT,
+                ProductID INT,
+                Quantity INT,
+                UnitPrice DECIMAL(10, 2),
+                FOREIGN KEY (QuotationID) REFERENCES Quotation(QuotationID),
+                FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
+            );
+        END
+    `);
+
     console.log('Preconfigured data inserted successfully.');
   } catch (error) {
     console.error('Error inserting preconfigured data:', error.message);

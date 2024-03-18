@@ -50,5 +50,6 @@ exports.getProducts = async (req, res) => {
     } finally {
         // Close the database connection
         sql.close();
+        console.log('Connection closed');
     }
 };

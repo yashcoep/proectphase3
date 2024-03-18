@@ -29,8 +29,9 @@
                             <h5 class="card-title"><%= product.Name %></h5>
                             <p class="card-text"><%= product.Description %></p>
                             <p class="card-text">Price: <%= product.Price %></p>
+                            <p class="card-text">Available: <%= product.Quantity %></p>
                             <label for="quantity">Quantity:</label>
-                            <input type="number" id="quantity_<%= product.ProductID %>" name="quantity" min="1" value="1">
+                            <input type="number" id="quantity_<%= product.ProductID %>" name="quantity" min="1" max="<%= product.Quantity %>" value="1">
                             <button onclick="addToCart('<%= product.Name %>', <%= product.Price %>, <%= product.ProductID %>)" class="btn btn-primary">Add to Cart</button>
                         </div>
                     </div>
@@ -74,19 +75,44 @@
 
     <script>
         // Function to add product to cart
-        function addToCart(name, price, id) {
-            const quantity = parseInt(document.getElementById('quantity_' + id).value);
+       function addToCart(name, price, id) {
+            const quantityInput = document.getElementById('quantity_' + id);
+            const quantity = parseInt(quantityInput.value);
+            const availableQuantity = parseInt(quantityInput.getAttribute('max')); // Retrieve the maximum available quantity from the input field attribute
+            if (quantity <= 0) {
+                    alert('Please enter a valid quantity.');
+                    return; // Exit function without adding the item to the cart
+            }
+            // Check if the product already exists in the cart
             let cart = JSON.parse(localStorage.getItem('cart')) || [];
-            const product = {
-                id: id,
-                name: name,
-                price: price,
-                quantity: quantity
-            };
-            cart.push(product);
+            let existingProductIndex = cart.findIndex(item => item.id === id);
+            if (existingProductIndex !== -1) {
+                // Product already exists in the cart, update its quantity
+                cart[existingProductIndex].quantity += quantity;
+                if (cart[existingProductIndex].quantity > availableQuantity) {
+                    alert('Requested quantity exceeds available quantity.');
+                    return; // Exit function without adding the item to the cart
+                }
+            } else {
+                // Product doesn't exist in the cart, add it
+                cart.push({
+                    id: id,
+                    name: name,
+                    price: price,
+                    quantity: quantity
+                });
+                if (quantity > availableQuantity) {
+                    alert('Requested quantity exceeds available quantity.');
+                    return; // Exit function without adding the item to the cart
+                }
+            }
+
+            // Update the cart in local storage
             localStorage.setItem('cart', JSON.stringify(cart));
             alert('Added ' + quantity + ' ' + name + '(s) to cart.');
         }
+
+
 
         // Function to view cart
         function viewCart() {
@@ -144,6 +170,8 @@
                 totalCost += item.price * item.quantity;
             });
 
+            console.log(cart)
+
             // Add total cost to quotation text
             quotationText += `\nTotal Cost: ${totalCost}\n\n`;
 
@@ -165,6 +193,47 @@
             document.body.appendChild(element);
             element.click();
             document.body.removeChild(element);
+
+            console.log(cart)
+            const quotation = {
+                companyName: companyName,
+                quatationcart: cart,
+                quotationDate: new Date().toLocaleDateString(),
+                totalCost: calculateTotalCost(cart)
+            };
+            console.log('Quatation' + JSON.stringify(quotation))
+
+            fetch('/saveQuotation', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(quotation)
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                } else {
+                    throw new Error('Failed to save quotation.');
+                }
+            })
+            .then(data => {
+                alert(data); // Show success message
+                localStorage.removeItem('cart'); // Clear cart after successful quotation
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error saving quotation.');
+            });
+
+        }
+
+        function calculateTotalCost(cart) {
+            let totalCost = 0;
+            cart.forEach(item => {
+                totalCost += item.price * item.quantity;
+            });
+            return totalCost;
         }
 
     </script>
