@@ -19,24 +19,3 @@ app.use('/', indexRoutes);
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
-
-const config = {
-    user: 'azureuser',
-    password: 'Test@1234',
-    server: 'qutation-project.database.windows.net',
-    database: 'Qutation',
-    options: {
-        encrypt: true // Use encryption
-    }
-};
-
-async function connectDatabase() {
-    try {
-        await sql.connect(config);
-        console.log('Connected to the database');
-    } catch (error) {
-        console.error('Error connecting to the database:', error);
-    }
-}
-
-connectDatabase();
