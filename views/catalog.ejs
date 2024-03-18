@@ -79,9 +79,9 @@
             const quantityInput = document.getElementById('quantity_' + id);
             const quantity = parseInt(quantityInput.value);
             const availableQuantity = parseInt(quantityInput.getAttribute('max')); // Retrieve the maximum available quantity from the input field attribute
-            if (quantity <= 0) {
-                    alert('Please enter a valid quantity.');
-                    return; // Exit function without adding the item to the cart
+            if (isNaN(quantity) || quantity <= 0) {
+                alert('Invalid quantity.');
+                return;
             }
             // Check if the product already exists in the cart
             let cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -226,6 +226,12 @@
                 alert('Error saving quotation.');
             });
 
+             $('#cartModal').modal('hide');
+
+            // Update quantities on catalog page
+            updateCatalogQuantities(cart);
+
+
         }
 
         function calculateTotalCost(cart) {
@@ -234,6 +240,10 @@
                 totalCost += item.price * item.quantity;
             });
             return totalCost;
+        }
+        function updateCatalogQuantities(cart) {
+            // Iterate through cart items and update quantities on the catalog page
+            window.location.reload();
         }
 
     </script>

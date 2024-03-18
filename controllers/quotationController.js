@@ -6,7 +6,7 @@ const config = require('../config/dbConfig'); // Import database configuration
 exports.saveQuotation = async (req, res) => {
     const quotationData = req.body;
     const cart = quotationData.quatationcart;
-
+ 	let pool;
     let transaction; // Declare transaction variable here
 
     try {
@@ -15,7 +15,7 @@ exports.saveQuotation = async (req, res) => {
         }
 
         // Connect to Azure SQL Database
-        const pool = await sql.connect(config);
+        pool = await sql.connect(config);
         console.log('Connected to the database');
 
         // Start a transaction
@@ -39,6 +39,13 @@ exports.saveQuotation = async (req, res) => {
             detailRequest.input('quantity', sql.Int, item.quantity);
             detailRequest.input('unitPrice', sql.Decimal(10, 2), item.price);
             await detailRequest.query('INSERT INTO QuotationDetail (QuotationID, ProductID, Quantity, UnitPrice) VALUES (@quotationID, @productID, @quantity, @unitPrice);');
+        
+            // Update product quantity
+            const updateRequest = new sql.Request(transaction);
+            updateRequest.input('productID', sql.Int, item.id);
+            updateRequest.input('quantity', sql.Int, item.quantity); // Subtract quantity from product
+            await updateRequest.query('UPDATE Products SET Quantity = Quantity - @quantity WHERE ProductID = @productID;');
+     
         }
 
         // Commit the transaction
@@ -52,7 +59,7 @@ exports.saveQuotation = async (req, res) => {
         res.status(500).send('Error saving quotation.');
     } finally {
         // Close the SQL connection
-        sql.close();
+        pool.close();
         console.log('Connection closed');
     }
 };
