@@ -13,9 +13,10 @@
     </style>
 </head>
 <body>
-    <!-- Logout button at the top right corner -->
+    <!-- Logout and View Cart buttons at the top right corner -->
     <div class="d-flex justify-content-end mb-3">
-        <a href="/logout" class="btn btn-danger">Logout</a>
+        <a href="/logout" class="btn btn-danger mr-2">Logout</a>
+        <button onclick="viewCart()" class="btn btn-primary">View Cart</button>
     </div>
 
     <div class="container mt-5">
@@ -30,7 +31,7 @@
                             <p class="card-text">Price: <%= product.Price %></p>
                             <label for="quantity">Quantity:</label>
                             <input type="number" id="quantity_<%= product.ProductID %>" name="quantity" min="1" value="1">
-                            <button onclick="generateQuotation('<%= product.Name %>', <%= product.Price %>, <%= product.ProductID %>)" class="btn btn-primary">Generate Quotation</button>
+                            <button onclick="addToCart('<%= product.Name %>', <%= product.Price %>, <%= product.ProductID %>)" class="btn btn-primary">Add to Cart</button>
                         </div>
                     </div>
                 </div>
@@ -48,26 +49,129 @@
         </div>
     </div>
 
+    <!-- Modal for displaying cart -->
+    <div class="modal fade" id="cartModal" tabindex="-1" role="dialog" aria-labelledby="cartModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cartModalLabel">Cart</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="cartItems">
+                <!-- Cart items will be displayed here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="clearCart()">Clear Cart</button>
+                <button type="button" class="btn btn-primary" onclick="downloadQuotation()">Download Quotation</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+    </div>
+
+
     <script>
-        function generateQuotation(name, price, id) {
-            const quantity = document.getElementById('quantity_' + id).value;
-            const total = price * quantity;
-            const quotationText = `Product Name: ${name}\nPrice per unit: ${price}\nQuantity: ${quantity}\nTotal: ${total}`;
-            downloadQuotation(quotationText, `${name}_quotation.txt`);
+        // Function to add product to cart
+        function addToCart(name, price, id) {
+            const quantity = parseInt(document.getElementById('quantity_' + id).value);
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const product = {
+                id: id,
+                name: name,
+                price: price,
+                quantity: quantity
+            };
+            cart.push(product);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            alert('Added ' + quantity + ' ' + name + '(s) to cart.');
         }
 
-        function downloadQuotation(quotationText, filename) {
+        // Function to view cart
+        function viewCart() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cartItems = document.getElementById('cartItems');
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<p>Your cart is empty.</p>';
+            } else {
+                let html = '<table class="table">';
+                html += '<thead><tr><th>Product</th><th>Price</th><th>Quantity</th><th>Total</th></tr></thead>';
+                html += '<tbody>';
+                cart.forEach(item => {
+                    html += `<tr><td>${item.name}</td><td>${item.price}</td><td>${item.quantity}</td><td>${item.price * item.quantity}</td></tr>`;
+                });
+                html += '</tbody></table>';
+                cartItems.innerHTML = html;
+            }
+            $('#cartModal').modal('show'); // Show the modal
+        }
+
+        function clearCart() {
+        localStorage.removeItem('cart');
+            $('#cartModal').modal('hide'); // Hide the modal
+            alert('Cart cleared.');
+        }
+
+        // Function to download quotation for the complete cart
+        function downloadQuotation() {
+            // Fetch cart content from local storage
+            const cart = JSON.parse(localStorage.getItem('cart'));
+            if (!cart || cart.length === 0) {
+                alert('Cart is empty.');
+                return;
+            }
+
+            // Company name
+            const companyName = "PWS Limited";
+
+            // Construct quotation text header
+            let quotationText = `${companyName} Quotation:\n\n`;
+            
+            // Construct cart table
+            quotationText += "Cart Items:\n\n";
+            quotationText += "----------------------------------------\n";
+            quotationText += "| Product       | Price    | Quantity |\n";
+            quotationText += "----------------------------------------\n";
+            cart.forEach(item => {
+                quotationText += `| ${item.name} | ${item.price} | ${item.quantity} |\n`;
+            });
+            quotationText += "----------------------------------------\n";
+
+            // Calculate total cost
+            let totalCost = 0;
+            cart.forEach(item => {
+                totalCost += item.price * item.quantity;
+            });
+
+            // Add total cost to quotation text
+            quotationText += `\nTotal Cost: ${totalCost}\n\n`;
+
+            // Quotation data
+            const quotationData = `Quotation Date: ${new Date().toLocaleDateString()}\n\n`;
+            // Add quotation data to quotation text
+            quotationText += quotationData;
+
+            // Terms and conditions
+            const termsAndConditions = "Terms and Conditions: Quotation is valid based on availability.";
+            // Add terms and conditions to quotation text
+            quotationText += `\n${termsAndConditions}`;
+
+            // Trigger download
             const element = document.createElement('a');
             element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(quotationText));
-            element.setAttribute('download', filename);
-
+            element.setAttribute('download', 'cart_quotation.txt');
             element.style.display = 'none';
             document.body.appendChild(element);
-
             element.click();
-
             document.body.removeChild(element);
         }
+
     </script>
+
+    <!-- Bootstrap JS and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
